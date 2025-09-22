@@ -24,11 +24,13 @@
         button:hover { background: #00b8d4; }
         #proxy-content { border: 1px solid #333; height: 70vh; overflow: auto; background: #000; color: #fff; padding: 15px; margin-top: 10px; border-radius: 5px; }
         .light-theme #proxy-content { background: #fff; color: #000; border-color: #ccc; }
-        .game-grid, .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .game-item, .app-item { background: #1a1a1a; padding: 15px; border-radius: 10px; transition: transform 0.3s; }
+        .game-grid, .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .game-item, .app-item { background: #1a1a1a; padding: 10px; border-radius: 10px; text-align: center; cursor: pointer; transition: transform 0.3s; }
         .light-theme .game-item, .light-theme .app-item { background: #f0f0f0; }
         .game-item:hover, .app-item:hover { transform: translateY(-5px); }
-        .game-item iframe, .app-item iframe { width: 100%; height: 180px; border: none; border-radius: 5px; }
+        .game-item img, .app-item img { width: 100%; height: 150px; object-fit: cover; border-radius: 5px; }
+        #game-player { margin-top: 20px; display: none; border: 1px solid #333; height: 600px; }
+        #game-player iframe { width: 100%; height: 100%; border: none; }
         #search { width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 5px; }
         h2 { color: #00d4ff; text-align: center; }
         #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
@@ -49,8 +51,8 @@
     </div>
     <canvas id="particles"></canvas>
     <header>
-        <h1>Interstellar Ghost</h1>
-        <p>Proxy the net. Game hard. Stay invisible.</p>
+        <h1>Interstellar Ghost V2</h1>
+        <p>Proxy heavy. Thumbs tease. Click to play. All firing.</p>
     </header>
     <nav>
         <button onclick="showTab('home')" class="active">Home</button>
@@ -60,38 +62,52 @@
         <button onclick="showTab('settings')">Settings</button>
     </nav>
     <section id="home" class="active">
-        <h2>Welcome to the Shadows</h2>
-        <p>Blazing proxy for any URL. 60+ games/apps. Cloak up and roll.</p>
-        <button onclick="aboutBlankProxy()">Open Blank Proxy Tab</button>
+        <h2>Welcome to the Void</h2>
+        <p>Proxy YouTube or any site. Thumbs for games/apps—click loads proxied where it sticks.</p>
+        <button onclick="aboutBlankProxy()">Blank Proxy Tab</button>
     </section>
     <section id="proxy">
-        <h2>Proxy Any Site</h2>
-        <input type="url" id="urlInput" placeholder="https://example.com" value="https://httpbin.org/html">
-        <button onclick="loadProxy()">Fetch Through Shadows</button>
-        <div id="proxy-content">Enter URL and fetch. Fast, no traces.</div>
+        <h2>Proxy Any URL</h2>
+        <input type="url" id="urlInput" placeholder="https://youtube.com" value="https://youtube.com">
+        <button onclick="loadProxy()">Tunnel It</button>
+        <div id="proxy-content">Punch in a URL like youtube.com. I'll proxy the whole damn thing.</div>
     </section>
     <section id="games">
         <h2>Games Arsenal</h2>
         <input type="text" id="search" placeholder="Search games..." oninput="filterItems('games')">
         <div class="game-grid" id="games-grid">
-            <!-- 30+ Games - Add more as needed -->
-            <div class="game-item" data-name="2048"><h3>2048</h3><iframe src="https://html5games.com/Game/2048/"></iframe></div>
-            <div class="game-item" data-name="Tetris"><h3>Tetris</h3><iframe src="https://tetris.com/embed"></iframe></div>
-            <div class="game-item" data-name="Pacman"><h3>Pac-Man</h3><iframe src="https://www.retrogames.cz/play_1280-MSX.php?language=EN"></iframe></div>
-            <!-- ... (abbreviating for space; add the full 60 from previous like Subway Surfers, etc.) -->
-            <div class="game-item" data-name="Minecraft Now.gg"><h3>Minecraft (Now.gg)</h3><iframe src="https://now.gg/en/g/minecraft-classic/embed"></iframe></div>
-            <div class="game-item" data-name="Roblox Now.gg"><h3>Roblox (Now.gg)</h3><iframe src="https://now.gg/en/g/roblox/embed"></iframe></div>
-            <!-- Full list would include Flappy Bird, Snake, etc. -->
+            <div class="game-item" data-name="2048" onclick="loadGame('https://html5games.com/Game/2048/', this.dataset.name)"><img src="https://play-lh.googleusercontent.com/0rgPbNirPoU6W3GfZB4Vqo81h7tFGC0G9tXR2-NQ6Kl7aYgQ6tWZgrK9w5bMF1tY7Vc" alt="2048"><h3>2048</h3></div>
+            <div class="game-item" data-name="Tetris" onclick="loadGame('https://funhtml5games.com/games/tetris', this.dataset.name)"><img src="https://www.tetris.com/images/tetris_logo.png" alt="Tetris"><h3>Tetris</h3></div>
+            <div class="game-item" data-name="Pacman" onclick="loadGame('https://funhtml5games.com/games/pacman', this.dataset.name)"><img src="https://upload.wikimedia.org/wikipedia/en/d/d0/Pac-man.png" alt="Pacman"><h3>Pacman</h3></div>
+            <div class="game-item" data-name="Snake" onclick="loadGame('https://html5games.com/Game/Snake/', this.dataset.name)"><img src="https://www.google.com/logos/fnbx/snake_arcade/v3/snake_00.png" alt="Snake"><h3>Snake</h3></div>
+            <div class="game-item" data-name="Flappy Bird" onclick="loadGame('https://funhtml5games.com/games/flappybird', this.dataset.name)"><img src="https://upload.wikimedia.org/wikipedia/en/9/9d/Flappy_Bird_icon.png" alt="Flappy Bird"><h3>Flappy Bird</h3></div>
+            <div class="game-item" data-name="Minesweeper" onclick="loadGame('https://html5games.com/Game/Minesweeper/', this.dataset.name)"><img src="https://upload.wikimedia.org/wikipedia/en/9/9b/Minesweeper.svg" alt="Minesweeper"><h3>Minesweeper</h3></div>
+            <div class="game-item" data-name="Sudoku" onclick="loadGame('https://html5games.com/Game/Sudoku/', this.dataset.name)"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Sudoku-by-L2G-20050714.svg/1200px-Sudoku-by-L2G-20050714.svg.png" alt="Sudoku"><h3>Sudoku</h3></div>
+            <div class="game-item" data-name="Breakout" onclick="loadGame('https://funhtml5games.com/games/breakout', this.dataset.name)"><img src="https://upload.wikimedia.org/wikipedia/en/5/5f/Breakout_2600.jpg" alt="Breakout"><h3>Breakout</h3></div>
+            <div class="game-item" data-name="Pong" onclick="loadGame('https://html5games.com/Game/Pong/', this.dataset.name)"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Pong.png" alt="Pong"><h3>Pong</h3></div>
+            <div class="game-item" data-name="Memory Game" onclick="loadGame('https://html5games.com/Game/Memory/', this.dataset.name)"><img src="https://img.freepik.com/premium-vector/memory-game-icon-vector-illustration_277635-5.jpg" alt="Memory Game"><h3>Memory Game</h3></div>
+            <div class="game-item" data-name="Subway Surfers" onclick="loadGame('https://poki.com/en/g/subway-surfers/embed', this.dataset.name)"><img src="https://play-lh.googleusercontent.com/4SIOv4rUoE8N0C1K6h8G_8J0ld3w3XhSWgYhCkG6zYV0oTaubH5m3L58-8hJi1xSrw" alt="Subway Surfers"><h3>Subway Surfers</h3></div>
+            <div class="game-item" data-name="Bubble Tower 3D" onclick="loadGame('https://html5games.com/Game/Bubble-Tower-3D/', this.dataset.name)"><img src="https://html5games.com/img/games/bubble-tower-3d.jpg" alt="Bubble Tower 3D"><h3>Bubble Tower 3D</h3></div>
+            <div class="game-item" data-name="Cannon Balls 3D" onclick="loadGame('https://html5games.com/Game/Cannon-Balls-3D/', this.dataset.name)"><img src="https://html5games.com/img/games/cannon-balls-3d.jpg" alt="Cannon Balls 3D"><h3>Cannon Balls 3D</h3></div>
+            <div class="game-item" data-name="Tower Crash 3D" onclick="loadGame('https://html5games.com/Game/Tower-Crash-3D/', this.dataset.name)"><img src="https://html5games.com/img/games/tower-crash-3d.jpg" alt="Tower Crash 3D"><h3>Tower Crash 3D</h3></div>
+            <div class="game-item" data-name="Geometry Dash" onclick="loadGame('https://funhtml5games.com/games/geometryjump', this.dataset.name)"><img src="https://upload.wikimedia.org/wikipedia/en/1/12/Geometry_Dash_cover_art.jpg" alt="Geometry Dash"><h3>Geometry Dash</h3></div>
+            <div class="game-item" data-name="Retro Bowl" onclick="loadGame('https://yell0wsuit.page/games/retro-bowl.html', this.dataset.name)"><img src="https://newstargames.com/images/retrobowl/icon.png" alt="Retro Bowl"><h3>Retro Bowl</h3></div>
+            <div class="game-item" data-name="Angry Birds" onclick="loadGame('https://yell0wsuit.page/games/angry-birds.html', this.dataset.name)"><img src="https://upload.wikimedia.org/wikipedia/en/0/06/Angry_Birds_icon.png" alt="Angry Birds"><h3>Angry Birds</h3></div>
+            <div class="game-item" data-name="Chrome Dino" onclick="loadGame('https://yell0wsuit.page/games/chrome-dino.html', this.dataset.name)"><img src="https://www.blog.google/static/blogv2/images/google-1000x1000.png" alt="Chrome Dino"><h3>Chrome Dino</h3></div>
+            <!-- Add more from your list, up to 60 with thumbs -->
         </div>
+        <div id="game-player"><iframe id="game-iframe" src=""></iframe></div>
     </section>
     <section id="apps">
         <h2>Apps & Launchers</h2>
         <input type="text" id="app-search" placeholder="Search apps..." oninput="filterItems('apps')">
         <div class="app-grid" id="apps-grid">
-            <div class="app-item" data-name="GeForce NOW"><h3>GeForce NOW</h3><iframe src="https://play.geforcenow.com/embed"></iframe></div>
-            <div class="app-item" data-name="Now.gg"><h3>Now.gg Launcher</h3><iframe src="https://now.gg/embed"></iframe></div>
-            <!-- Add more: YouTube proxy, ChatGPT embed, etc. -->
+            <div class="app-item" data-name="Minecraft (Now.gg)" onclick="loadGame('https://now.gg/en/g/minecraft-classic/embed', this.dataset.name)"><img src="https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png" alt="Minecraft"><h3>Minecraft (Now.gg)</h3></div>
+            <div class="app-item" data-name="Roblox (Now.gg)" onclick="loadGame('https://now.gg/en/g/roblox/embed', this.dataset.name)"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Roblox_Logo.svg" alt="Roblox"><h3>Roblox (Now.gg)</h3></div>
+            <div class="app-item" data-name="GeForce NOW" onclick="loadGame('https://play.geforcenow.com/embed', this.dataset.name)"><img src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/geforce-now/gfn-logo-2020.png" alt="GeForce NOW"><h3>GeForce NOW</h3></div>
+            <!-- Add more apps with thumbs -->
         </div>
+        <div id="app-player"><iframe id="app-iframe" src=""></iframe></div>
     </section>
     <section id="settings">
         <h2>Cloak & Tools</h2>
@@ -103,17 +119,17 @@
         <button onclick="setTheme('dark')">Dark</button>
         <button onclick="setTheme('light')">Light</button>
         <h3>Tools</h3>
-        <button onclick="toggleInspect()">Inspect Element</button>
+        <button onclick="toggleInspect()">Inspect</button>
         <button onclick="toggleParticles()">Particles</button>
     </section>
 
     <script>
-        // Password (change 'ghost' to your key)
+        // Password
         function checkPass() {
             if (document.getElementById('passInput').value === 'ghost') {
                 document.getElementById('password-overlay').style.display = 'none';
             } else {
-                alert('Wrong key, Boss. Try again.');
+                alert('Wrong. Try again.');
             }
         }
 
@@ -127,26 +143,44 @@
         async function loadProxy() {
             const url = document.getElementById('urlInput').value;
             const content = document.getElementById('proxy-content');
-            content.innerHTML = '<p>Loading... Hold tight.</p>';
-            try {
-                // Chain proxies for reliability
-                let proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-                let response = await fetch(proxyUrl);
-                if (!response.ok) {
-                    proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-                    response = await fetch(proxyUrl);
-                }
-                const html = await response.text();
-                content.innerHTML = html;
-            } catch (e) {
-                content.innerHTML = `<p>Snag: ${e.message}. VPN up?</p>`;
+            content.innerHTML = '<p>Tunneling... Hold.</p>';
+            const proxies = [
+                `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+                `https://corsproxy.io/?${encodeURIComponent(url)}`,
+                `https://ycors.app/?${encodeURIComponent(url)}` // Extra for YouTube
+            ];
+            for (let proxyUrl of proxies) {
+                try {
+                    const response = await fetch(proxyUrl);
+                    if (response.ok) {
+                        const html = await response.text();
+                        content.innerHTML = html;
+                        return;
+                    }
+                } catch (e) {}
             }
+            content.innerHTML = '<p>Proxy chain failed. Heavy site? Deploy full server.</p>';
+        }
+
+        function loadGame(gameUrl, name) {
+            const player = document.getElementById('game-player');
+            const iframe = document.getElementById('game-iframe');
+            player.style.display = 'block';
+            // Try proxy first, fallback to direct
+            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(gameUrl)}`;
+            fetch(proxyUrl).then(res => res.text()).then(html => {
+                iframe.srcdoc = html; // Load proxied HTML in iframe for interaction
+            }).catch(() => {
+                iframe.src = gameUrl; // Direct if proxy flops
+            });
+            player.scrollIntoView();
         }
 
         function aboutBlankProxy() {
-            const newTab = window.open('', '_blank');
-            newTab.document.write('<html><head><title>Loading...</title></head><body style="background:black;color:white;">Redirecting to proxy...</body></html>');
-            newTab.location.href = window.location.href + '#proxy'; // Reloads in blank with proxy tab active
+            const newTab = window.open();
+            newTab.document.write('<html><head><title>Loading...</title></head><body style="background:black;color:white;">Proxying...</body></html>');
+            newTab.document.close();
+            setTimeout(() => newTab.location.href = window.location.href, 500); // Reload self in blank
         }
 
         function applyCloak() {
@@ -159,13 +193,47 @@
         }
 
         function toggleInspect() {
-            if (document.body.requestFullscreen) document.body.requestFullscreen();
-            else alert('Open dev tools manually (F12).');
+            alert('Hit F12 for dev tools.');
         }
 
-        // Particles (from before)
+        // Particles (simple)
         let particlesOn = false;
-        function toggleParticles() { /* ... same as previous ... */ }
+        function toggleParticles() {
+            particlesOn = !particlesOn;
+            if (particlesOn) initParticles();
+            else document.getElementById('particles').getContext('2d').clearRect(0, 0, window.innerWidth, window.innerHeight);
+        }
+        function initParticles() {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 3 + 1,
+                    vx: Math.random() * 2 - 1,
+                    vy: Math.random() * 2 - 1
+                });
+            }
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'rgba(0, 212, 255, 0.5)';
+                particles.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > canvas.width) p.vx = -p.vx;
+                    if (p.y < 0 || p.y > canvas.height) p.vy = -p.vy;
+                });
+                if (particlesOn) requestAnimationFrame(draw);
+            }
+            draw();
+        }
 
         function filterItems(type) {
             const query = (type === 'games' ? document.getElementById('search') : document.getElementById('app-search')).value.toLowerCase();
@@ -176,7 +244,6 @@
 
         // Init
         showTab('home');
-        initParticles(); // Optional
     </script>
 </body>
 </html>
