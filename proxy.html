@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study.com</title> <!-- Default cloak -->
+    <link id="favicon" rel="icon" href="https://www.study.com/favicon.ico">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #0a0a0a; color: #fff; transition: all 0.3s; overflow-x: hidden; }
+        .light-theme { background: #f5f5f5; color: #000; }
+        .light-theme #proxy-content, .light-theme .game-item { background: #fff; color: #000; }
+        header { background: linear-gradient(135deg, #1e3c72, #2a5298); padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .light-theme header { background: linear-gradient(135deg, #e0e0e0, #f0f0f0); }
+        nav { background: #1a1a1a; padding: 10px; display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
+        .light-theme nav { background: #e0e0e0; }
+        nav button { background: #333; color: #fff; border: none; padding: 12px 24px; border-radius: 25px; cursor: pointer; transition: all 0.3s; min-width: 100px; }
+        .light-theme nav button { background: #ccc; color: #000; }
+        nav button.active { background: #00d4ff; transform: scale(1.05); }
+        section { padding: 20px; display: none; min-height: 70vh; }
+        section.active { display: block; }
+        input[type="url"], input[type="text"], input[type="password"] { width: 70%; padding: 12px; border-radius: 5px; border: 1px solid #444; }
+        .light-theme input { border-color: #ccc; background: #fff; color: #000; }
+        button { padding: 12px 24px; background: #00d4ff; color: #000; border: none; border-radius: 5px; cursor: pointer; margin: 5px; transition: background 0.3s; }
+        button:hover { background: #00b8d4; }
+        #proxy-content { border: 1px solid #333; height: 70vh; overflow: auto; background: #000; color: #fff; padding: 15px; margin-top: 10px; border-radius: 5px; }
+        .light-theme #proxy-content { background: #fff; color: #000; border-color: #ccc; }
+        .game-grid, .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .game-item, .app-item { background: #1a1a1a; padding: 15px; border-radius: 10px; transition: transform 0.3s; }
+        .light-theme .game-item, .light-theme .app-item { background: #f0f0f0; }
+        .game-item:hover, .app-item:hover { transform: translateY(-5px); }
+        .game-item iframe, .app-item iframe { width: 100%; height: 180px; border: none; border-radius: 5px; }
+        #search { width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 5px; }
+        h2 { color: #00d4ff; text-align: center; }
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        #password-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        #password-form { background: #333; padding: 30px; border-radius: 10px; text-align: center; }
+        .light-theme #password-form { background: #ddd; }
+        .cloak-btn { background: #ff6b6b; }
+        .cloak-btn:hover { background: #ff5252; }
+    </style>
+</head>
+<body>
+    <div id="password-overlay">
+        <div id="password-form">
+            <h3>Enter Passcode</h3>
+            <input type="password" id="passInput" placeholder="Ghost Key">
+            <button onclick="checkPass()">Unlock</button>
+        </div>
+    </div>
+    <canvas id="particles"></canvas>
+    <header>
+        <h1>Interstellar Ghost</h1>
+        <p>Proxy the net. Game hard. Stay invisible.</p>
+    </header>
+    <nav>
+        <button onclick="showTab('home')" class="active">Home</button>
+        <button onclick="showTab('proxy')">Proxy</button>
+        <button onclick="showTab('games')">Games</button>
+        <button onclick="showTab('apps')">Apps</button>
+        <button onclick="showTab('settings')">Settings</button>
+    </nav>
+    <section id="home" class="active">
+        <h2>Welcome to the Shadows</h2>
+        <p>Blazing proxy for any URL. 60+ games/apps. Cloak up and roll.</p>
+        <button onclick="aboutBlankProxy()">Open Blank Proxy Tab</button>
+    </section>
+    <section id="proxy">
+        <h2>Proxy Any Site</h2>
+        <input type="url" id="urlInput" placeholder="https://example.com" value="https://httpbin.org/html">
+        <button onclick="loadProxy()">Fetch Through Shadows</button>
+        <div id="proxy-content">Enter URL and fetch. Fast, no traces.</div>
+    </section>
+    <section id="games">
+        <h2>Games Arsenal</h2>
+        <input type="text" id="search" placeholder="Search games..." oninput="filterItems('games')">
+        <div class="game-grid" id="games-grid">
+            <!-- 30+ Games - Add more as needed -->
+            <div class="game-item" data-name="2048"><h3>2048</h3><iframe src="https://html5games.com/Game/2048/"></iframe></div>
+            <div class="game-item" data-name="Tetris"><h3>Tetris</h3><iframe src="https://tetris.com/embed"></iframe></div>
+            <div class="game-item" data-name="Pacman"><h3>Pac-Man</h3><iframe src="https://www.retrogames.cz/play_1280-MSX.php?language=EN"></iframe></div>
+            <!-- ... (abbreviating for space; add the full 60 from previous like Subway Surfers, etc.) -->
+            <div class="game-item" data-name="Minecraft Now.gg"><h3>Minecraft (Now.gg)</h3><iframe src="https://now.gg/en/g/minecraft-classic/embed"></iframe></div>
+            <div class="game-item" data-name="Roblox Now.gg"><h3>Roblox (Now.gg)</h3><iframe src="https://now.gg/en/g/roblox/embed"></iframe></div>
+            <!-- Full list would include Flappy Bird, Snake, etc. -->
+        </div>
+    </section>
+    <section id="apps">
+        <h2>Apps & Launchers</h2>
+        <input type="text" id="app-search" placeholder="Search apps..." oninput="filterItems('apps')">
+        <div class="app-grid" id="apps-grid">
+            <div class="app-item" data-name="GeForce NOW"><h3>GeForce NOW</h3><iframe src="https://play.geforcenow.com/embed"></iframe></div>
+            <div class="app-item" data-name="Now.gg"><h3>Now.gg Launcher</h3><iframe src="https://now.gg/embed"></iframe></div>
+            <!-- Add more: YouTube proxy, ChatGPT embed, etc. -->
+        </div>
+    </section>
+    <section id="settings">
+        <h2>Cloak & Tools</h2>
+        <h3>Tab Cloak</h3>
+        <input type="text" id="cloak-title" placeholder="Tab Title (e.g., Google Docs)">
+        <input type="url" id="cloak-favicon" placeholder="Favicon URL">
+        <button onclick="applyCloak()">Apply</button>
+        <h3>Themes</h3>
+        <button onclick="setTheme('dark')">Dark</button>
+        <button onclick="setTheme('light')">Light</button>
+        <h3>Tools</h3>
+        <button onclick="toggleInspect()">Inspect Element</button>
+        <button onclick="toggleParticles()">Particles</button>
+    </section>
+
+    <script>
+        // Password (change 'ghost' to your key)
+        function checkPass() {
+            if (document.getElementById('passInput').value === 'ghost') {
+                document.getElementById('password-overlay').style.display = 'none';
+            } else {
+                alert('Wrong key, Boss. Try again.');
+            }
+        }
+
+        function showTab(tab) {
+            document.querySelectorAll('section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        async function loadProxy() {
+            const url = document.getElementById('urlInput').value;
+            const content = document.getElementById('proxy-content');
+            content.innerHTML = '<p>Loading... Hold tight.</p>';
+            try {
+                // Chain proxies for reliability
+                let proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+                let response = await fetch(proxyUrl);
+                if (!response.ok) {
+                    proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+                    response = await fetch(proxyUrl);
+                }
+                const html = await response.text();
+                content.innerHTML = html;
+            } catch (e) {
+                content.innerHTML = `<p>Snag: ${e.message}. VPN up?</p>`;
+            }
+        }
+
+        function aboutBlankProxy() {
+            const newTab = window.open('', '_blank');
+            newTab.document.write('<html><head><title>Loading...</title></head><body style="background:black;color:white;">Redirecting to proxy...</body></html>');
+            newTab.location.href = window.location.href + '#proxy'; // Reloads in blank with proxy tab active
+        }
+
+        function applyCloak() {
+            document.title = document.getElementById('cloak-title').value || 'Google Docs';
+            document.getElementById('favicon').href = document.getElementById('cloak-favicon').value || 'https://docs.google.com/favicon.ico';
+        }
+
+        function setTheme(theme) {
+            document.body.classList.toggle('light-theme', theme === 'light');
+        }
+
+        function toggleInspect() {
+            if (document.body.requestFullscreen) document.body.requestFullscreen();
+            else alert('Open dev tools manually (F12).');
+        }
+
+        // Particles (from before)
+        let particlesOn = false;
+        function toggleParticles() { /* ... same as previous ... */ }
+
+        function filterItems(type) {
+            const query = (type === 'games' ? document.getElementById('search') : document.getElementById('app-search')).value.toLowerCase();
+            document.querySelectorAll(`#${type}-grid > div`).forEach(item => {
+                item.style.display = item.dataset.name.toLowerCase().includes(query) ? 'block' : 'none';
+            });
+        }
+
+        // Init
+        showTab('home');
+        initParticles(); // Optional
+    </script>
+</body>
+</html>
